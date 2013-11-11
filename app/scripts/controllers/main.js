@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('todoApp')
-  .controller('MainCtrl', function ($scope, Todos) {
-        //$scope.todos = [];
+  .controller('MainCtrl', function ($scope, Todos, Serverevents) {
+        var messageCallback = function (data) {
+            $scope.todos.push({text:data.text, done:data.done});
+            $scope.$apply();
+        };
 
         $scope.addTodo = function() {
             $scope.todos.push({text:$scope.todoText, done:false});
@@ -28,4 +31,9 @@ angular.module('todoApp')
         };
 
         $scope.todos = Todos.getTodos();
+
+        Serverevents.connect();
+
+        Serverevents.subscribeMessage(messageCallback);
+        console.log("MainCtrl running");
     });
