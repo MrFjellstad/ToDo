@@ -10,8 +10,7 @@ angular.module('todoApp')
         };
 
         var websocketCallback = function (data) {
-            var parsedData = JSON.parse(data);
-            $scope.todos.push({text:parsedData.text, done:parsedData.done});
+            $scope.todos.push({text:data.text, done:data.done});
             $scope.$apply();
         };
 
