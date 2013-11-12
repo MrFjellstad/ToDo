@@ -1,15 +1,27 @@
 'use strict';
 
 angular.module('todoApp')
-  .controller('MainCtrl', function ($scope, Todos, Serverevents) {
+    .controller('MainCtrl', function ($scope, Todos, Serverevents, Websocketevents) {
+        $scope.alerts = [];
+
         var messageCallback = function (data) {
-            $scope.todos.push({text:data.text, done:data.done});
+            $scope.alerts.push({text:data.text, done:data.done});
+            $scope.$apply();
+        };
+
+        var websocketCallback = function (data) {
+            var parsedData = JSON.parse(data);
+            $scope.todos.push({text:parsedData.text, done:parsedData.done});
             $scope.$apply();
         };
 
         $scope.addTodo = function() {
             $scope.todos.push({text:$scope.todoText, done:false});
+
+            Websocketevents.send($scope.todoText);
+
             $scope.todoText = '';
+
         };
 
         $scope.remaining = function() {
@@ -35,5 +47,10 @@ angular.module('todoApp')
         Serverevents.connect();
 
         Serverevents.subscribeMessage(messageCallback);
-        console.log("MainCtrl running");
+
+        Websocketevents.connect();
+
+        Websocketevents.subscribe(websocketCallback);
+
+        console.log('MainCtrl running');
     });

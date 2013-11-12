@@ -14,4 +14,11 @@
         <input class="btn-primary" type="submit" value="add">
     </form>
     Search: <input ng-model="query">
+
+    <ul class="alerts">
+        <li ng-repeat="alert in alerts">
+            <span class="done-{{alert.done}}">{{alert.text}}</span>
+            <delete-item list="alerts" item="alert"></delete-item>
+        </li>
+    </ul>
 </div>
