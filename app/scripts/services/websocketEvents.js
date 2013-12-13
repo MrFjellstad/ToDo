@@ -4,8 +4,7 @@ angular.module('todoApp')
     .service('Websocketevents', function () {
         // AngularJS will instantiate a singleton by calling "new" on this function
         var Websocketevents = {},
-            socket,
-            lastSendt;
+            socket;
 
         Websocketevents.connect = function () {
             if (socket) {
@@ -22,19 +21,14 @@ angular.module('todoApp')
             socket.onmessage = function(msg) {
                 var recievedObject = JSON.parse(msg.data);
                 console.log('Recieved ' + msg.data);
-                if (recievedObject.token !== lastSendt) {
-                    callback(recievedObject);
-                }
+                callback(recievedObject);
             };
         };
 
         Websocketevents.send = function (message) {
             var messageObject = {};
 
-            lastSendt = Math.random();
-
             messageObject = {
-                token : lastSendt,
                 message : message
             };
 
